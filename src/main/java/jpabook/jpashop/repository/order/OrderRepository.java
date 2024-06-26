@@ -1,4 +1,4 @@
-package jpabook.jpashop.repository;
+package jpabook.jpashop.repository.order;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
@@ -99,5 +99,36 @@ public class OrderRepository {
         TypedQuery<Order> query = em.createQuery(cq).setMaxResults(1000); // 최대 1000건 검색
 
         return query.getResultList();
+    }
+
+//    public List<Order> findAllWithMemberDelivery() {
+//        return em.createQuery(
+//                "select o from Order o" +
+//                        " join fetch o.member m" +
+//                        " join fetch o.delivery d", Order.class
+//        ).getResultList();
+
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class
+        ).setFirstResult(offset).setMaxResults(limit).getResultList();
+    }
+
+    /**
+     * 1대N join이 있을 때는 중복 데이터 때문에 DB상 row가 증가하며<br>
+     * 같은 엔티티에 대한 조회 수도 증가하게 된다.<br>
+     * 이 때 distinct를 사용하면 JPA에서 중복 엔티티를 조회할 때 중복을 걸러준다.＜br>
+     * 하지만 페이징이 불가능하다.
+     */
+    public List<Order> findAllWithItem() {
+        return em.createQuery(
+                "select distinct o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d" +
+                        " join fetch o.orderItems oi" +
+                        " join fetch oi.item i", Order.class
+        ).getResultList();
     }
 }

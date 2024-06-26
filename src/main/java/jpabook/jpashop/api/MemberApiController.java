@@ -8,11 +8,51 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController // 데이터를 json, xml로 바로 응답하기 위한 어노테이션
 @RequiredArgsConstructor
 public class MemberApiController {
 
     private final MemberService memberService;
+
+    /**
+     * 엔티티에 프레젠테이션 레이어 로직이 추가되어야 하며<br>
+     * 엔티티의 모든 값을 노출하게 된다.<br>
+     * 이처럼 엔티티를 수정하게 되면 API 스펙이 변경되기 때문에 이런 개발은 지양할 것.<br>
+     * 뿐만 아니라 출력 포맷을 엔티티의 배열로 고정할 수 밖에 없게 된다.
+     */
+    @GetMapping("/api/v1/members")
+    public List<Member> membersV1() {
+        return memberService.findMembers();
+    }
+
+    /**
+     * Result, MemberDto 클래스를 활용해 출력 양식 성형 로직도 프레젠테이션 레벨에서 해결할 수 있고<br>
+     * 이 외에 다른 데이터를 추가하기도 용이하여 이후 유지보수에 좋다.
+     */
+    @GetMapping("/api/v2/members")
+    public Result membersV2() {
+        List<Member> findMembers = memberService.findMembers();
+        List<MemberDto> collect = findMembers.stream()
+                .map(m -> new MemberDto(m.getName())).collect(Collectors.toList());
+
+        return new Result(collect.size(), collect);
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private int count;
+        private T data; // data라는 key의 배열 데이터를 가진다.
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class MemberDto {
+        private String name;
+    }
 
     @PostMapping("/api/v1/members")
     public CreateMemberResponse saveMemberV1(@RequestBody @Valid Member member) {
@@ -64,9 +104,13 @@ public class MemberApiController {
     }
 
     @Data
-    @AllArgsConstructor
     static class UpdateMemberResponse {
         private Long id;
         private String name;
+
+        public UpdateMemberResponse(Long id, String name) {
+            this.id = id;
+            this.name = name;
+        }
     }
 }

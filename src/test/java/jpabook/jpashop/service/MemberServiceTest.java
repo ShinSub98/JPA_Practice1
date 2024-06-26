@@ -10,8 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Transactional
@@ -30,7 +28,7 @@ public class MemberServiceTest {
         Long savedId = memberService.join(member);
 
         //3
-        Assert.assertEquals(member, memberRepository.findOne(savedId));
+        Assert.assertEquals(member, memberRepository.findById(savedId));
     }
 
     @Test(expected = IllegalStateException.class)
