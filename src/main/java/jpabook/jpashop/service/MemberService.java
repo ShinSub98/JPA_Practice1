@@ -1,6 +1,7 @@
 package jpabook.jpashop.service;
 
 import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,10 @@ public class MemberService {
     public void update(Long id, String name) {
         Member member = memberRepository.findById(id);
         member.setName(name);
+    }
+
+    public List<Order> findOrders() {
+        Member member = memberRepository.findById(1L);
+        return member.getOrders();
     }
 }

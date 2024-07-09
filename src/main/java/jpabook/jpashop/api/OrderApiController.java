@@ -1,6 +1,7 @@
 package jpabook.jpashop.api;
 
 import jpabook.jpashop.domain.*;
+import jpabook.jpashop.repository.order.OrderPracDto;
 import jpabook.jpashop.repository.order.OrderRepository;
 import jpabook.jpashop.repository.order.query.OrderFlatDto;
 import jpabook.jpashop.repository.order.query.OrderItemQueryDto;
@@ -9,6 +10,7 @@ import jpabook.jpashop.repository.order.query.OrderQueryRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -64,7 +66,7 @@ public class OrderApiController {
         private Address address;
         private List<OrderItemDto> orderItems;
 
-        public OrderDto(Order order) {
+        public cOrderDto(Order order) {
             orderId = order.getId();
             name = order.getMember().getName();
             orderDate = order.getOrderDate();
@@ -136,5 +138,15 @@ public class OrderApiController {
                         Collectors.mapping(o -> new OrderItemQueryDto(o.getOrderId(), o.getItemName(), o.getOrderPrice(), o.getCount()), toList())
                 )).entrySet().stream().map(e -> new OrderQueryDto(e.getKey().getOrderId(), e.getKey().getName(), e.getKey().getOrderDate(),
                         e.getKey().getOrderStatus(), e.getKey().getAddress(), e.getValue())).collect(toList());
+    }
+
+//    @GetMapping("/api/orders/{id}")
+//    public List<OrderPracDto> findById(@PathVariable Long id) {
+//        return orderRepository.findByMemberId(id);
+//    }
+
+    @GetMapping("/api/orders/all")
+    public List<OrderPracDto> findAllPrac() {
+        return orderRepository.findAllOrdersPrac();
     }
 }

@@ -6,6 +6,7 @@ import jakarta.persistence.criteria.*;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderSearch;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -131,4 +132,17 @@ public class OrderRepository {
                         " join fetch oi.item i", Order.class
         ).getResultList();
     }
+
+//    public List<OrderPracDto> findByMemberId(Long memberId) {
+//        return em.createQuery("select new jpabook.jpashop.repository.order.OrderPracDto(new jpabook.jpashop.repository.order.query.OrderItemQueryDto(o.id))" +
+//                " from Order o" +
+//                " where o.member.id = :memberId", OrderPracDto.class).setParameter("memberId", memberId).getResultList();
+//    }
+
+    public List<OrderPracDto> findAllOrdersPrac() {
+        return em.createQuery("select new jpabook.jpashop.repository.order.OrderPracDto(o.id, o.member.id, o.member.name)" +
+                " from Order o", OrderPracDto.class).getResultList();
+    }
+
+
 }

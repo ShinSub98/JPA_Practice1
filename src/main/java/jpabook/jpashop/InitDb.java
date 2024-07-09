@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import jpabook.jpashop.domain.*;
 import jpabook.jpashop.domain.item.Book;
+import jpabook.jpashop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ public class InitDb {
      */
     @PostConstruct
     public void init() {
-        initService.dbInit1();
+//        initService.dbInit1();
         initService.dbInit2();
     }
 
@@ -32,22 +33,6 @@ public class InitDb {
 
         private final EntityManager em;
 
-        public void dbInit1() {
-            Member member = createMember("userA", "서울", "1", "1111");
-            em.persist(member);
-
-            Book book1 = createBook("JPA1 BOOK", 10000, 100);
-            em.persist(book1);
-
-            Book book2 = createBook("JPA2 BOOK", 20000, 100);
-            em.persist(book2);
-
-            OrderItem orderItem1 = OrderItem.createOrderItem(book1, 10000, 1);
-            OrderItem orderItem2 = OrderItem.createOrderItem(book2, 20000, 2);
-
-            Order order = Order.createOrder(member, createDelivery(member), orderItem1, orderItem2);
-            em.persist(order);
-        }
 
         public void dbInit2() {
             Member member = createMember("userB", "서울", "2", "2222");
@@ -66,6 +51,11 @@ public class InitDb {
 
             Order order = Order.createOrder(member, createDelivery(member), orderItem1, orderItem2);
             em.persist(order);
+
+            Order order2 = Order.createOrder(member, createDelivery(member), orderItem1, orderItem2);
+            em.persist(order2);
+            member.getOrders().add(order);
+            member.getOrders().add(order2);
         }
 
         private Member createMember(String name, String city, String street, String zipcode) {

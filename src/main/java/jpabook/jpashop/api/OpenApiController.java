@@ -14,21 +14,21 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class OpenApiController {
 
-    private final OpenApiService openApiService;
-
-    @PostMapping("/api/v1/geo")
-    public Mono<GeoResponse> getGeoV1(@RequestBody @Valid GeoRequest request) {
-        return openApiService.getGeoWithDto(request.getAddress());
-    }
-
-    @Data
-    static class GeoRequest {
-        private String address;
-
-        public GeoRequest() {}
-
-        public GeoRequest(String address) {
-            this.address = address;
-        }
-    }
+//    private final OpenApiService openApiService;
+//
+//    @PostMapping("/api/v1/geo")
+//    public Mono<GeoResponse> getGeoV1(@RequestBody @Valid GeoRequest request) {
+//        return openApiService.getGeoWithDto(request.getAddress());
+//    }
+//
+//    @Data
+//    static class GeoRequest {
+//        private String address;
+//
+//        public GeoRequest() {}
+//
+//        public GeoRequest(String address) {
+//            this.address = address;
+//        }
+//    }
 }

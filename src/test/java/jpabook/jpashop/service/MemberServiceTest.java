@@ -1,6 +1,7 @@
 package jpabook.jpashop.service;
 
 import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.repository.MemberRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -47,4 +50,16 @@ public class MemberServiceTest {
         Assert.fail("예외 발생해야 함");
     }
 
+    @Test
+    public void 엔티티_조회_테스트() throws Exception {
+        /*given*/
+        Member member = memberRepository.findById(1L);
+
+        /*when*/
+        List<Order> orders = member.getOrders();
+
+        /*then*/
+        Assert.assertEquals(2, orders.size());
+        System.out.println("주문의 ID값 = " + orders.get(0).getId());
+    }
 }

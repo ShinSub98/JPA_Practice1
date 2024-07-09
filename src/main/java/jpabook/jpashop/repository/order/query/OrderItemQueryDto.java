@@ -19,5 +19,7 @@ public class OrderItemQueryDto {
         this.count = count;
     }
 
-
+    public OrderItemQueryDto(Long orderId) {
+        this.orderId = orderId;
+    }
 }

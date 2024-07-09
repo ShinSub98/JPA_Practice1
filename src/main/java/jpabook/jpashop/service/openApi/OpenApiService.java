@@ -68,5 +68,4 @@ public class OpenApiService {
             private String y;
         }
     }
-
 }
